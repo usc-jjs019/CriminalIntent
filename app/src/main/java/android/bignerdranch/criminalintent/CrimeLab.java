@@ -3,12 +3,13 @@ package android.bignerdranch.criminalintent;
 import android.content.Context;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
     private Context mAppContext;
-    private ArrayList<Crime> mCrimes;
+    private List<Crime> mCrimes;
 
     private CrimeLab(Context context) {
         mAppContext = context;
@@ -28,7 +29,7 @@ public class CrimeLab {
         return sCrimeLab;
     }
 
-    public ArrayList<Crime> getCrimes() {
+    public List<Crime> getCrimes() {
         return mCrimes;
     }
 
