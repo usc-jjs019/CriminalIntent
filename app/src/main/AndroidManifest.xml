@@ -16,7 +16,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name=".CrimeActivity">
+            android:name=".CrimeActivity"
+            android:parentActivityName=".CrimeListActivity">
         </activity>
     </application>
 
