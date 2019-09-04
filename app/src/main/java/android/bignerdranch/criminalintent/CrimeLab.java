@@ -101,7 +101,7 @@ public class CrimeLab {
         return values;
     }
 
-    public void deleteCrime(UUID id, Crime crime) {
-        mCrime.remove(id,crime);
+    public void deleteCrime(Crime crime) {
+        mDatabase.delete(CrimeDbSchema.CrimeTable.NAME, "uuid =" + '"' + crime.getId() + '"', null);
     }
 }
