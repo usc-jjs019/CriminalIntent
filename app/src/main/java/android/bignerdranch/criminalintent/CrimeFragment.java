@@ -100,6 +100,8 @@ public class CrimeFragment extends Fragment {
                         LocationServices.FusedLocationApi.requestLocationUpdates(mClient, request, new LocationListener() {
                             @Override
                             public void onLocationChanged(Location location) {
+                                mCrime.setLat(location.getLatitude());
+                                mCrime.setLon(location.getLongitude());
                                 Log.i("LOCATION", "Got a fix: " + location);
                             }
                         });
