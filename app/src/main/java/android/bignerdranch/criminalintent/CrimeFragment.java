@@ -55,6 +55,7 @@ public class CrimeFragment extends Fragment {
     private File mPhotoFile;
     private EditText mTitleField;
     private Button mDateButton;
+    private TextView mLocationView;
     private Button mMapButton;
     private CheckBox mSolvedCheckBox;
     private Button mSuspectButton;
@@ -157,6 +158,10 @@ public class CrimeFragment extends Fragment {
                 dialog.show(manager, DIALOG_DATE);
             }
         });
+
+        mLocationView = (TextView)v.findViewById(R.id.crime_location_label);
+        String coordinates = ("latitude: " + mCrime.getLat() + " longtitude: " + mCrime.getLon());
+        mLocationView.setText(coordinates)
 
         mMapButton = (Button)v.findViewById(R.id.crime_location);
         mMapButton.setOnClickListener(new View.OnClickListener() {
