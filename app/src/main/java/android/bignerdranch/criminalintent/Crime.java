@@ -7,6 +7,8 @@ public class Crime {
     private UUID mId;
     private String mTitle;
     private Date mDate;
+    private double mLat;
+    private double mLong;
     private boolean mSolved;
     private String mSuspect;
 
@@ -42,6 +44,19 @@ public class Crime {
 
     public void setDate(Date date) {
         mDate = date;
+    }
+
+    public double getLat() {
+        return mLat;
+    }
+    public void setLat(double lat) {
+        mLat = lat;
+    }
+    public double getLon() {
+        return mLong;
+    }
+    public void setLon(double lon) {
+        mLong = lon;
     }
 
     public boolean isSolved() {

@@ -1,11 +1,13 @@
 package android.bignerdranch.criminalintent;
 
+import android.Manifest;
 import android.app.Activity;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
 import android.database.Cursor;
 import android.graphics.Bitmap;
+import android.location.Location;
 import android.net.Uri;
 import android.os.Bundle;
 import android.provider.ContactsContract;
@@ -13,6 +15,7 @@ import android.provider.MediaStore;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.format.DateFormat;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -23,9 +26,16 @@ import android.widget.EditText;
 import android.widget.ImageButton;
 import android.widget.ImageView;
 
+import androidx.annotation.Nullable;
+import androidx.core.content.ContextCompat;
 import androidx.core.content.FileProvider;
 import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
+
+import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationListener;
+import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
 import java.util.Date;
@@ -45,12 +55,15 @@ public class CrimeFragment extends Fragment {
     private File mPhotoFile;
     private EditText mTitleField;
     private Button mDateButton;
+    private Button mMapButton;
     private CheckBox mSolvedCheckBox;
     private Button mSuspectButton;
     private Button mReportButton;
     private ImageButton mPhotoButton;
     private ImageView mPhotoView;
     private Button mDeleteButton;
+
+    private GoogleApiClient mClient;
 
     public static CrimeFragment newInstance(UUID crimeId) {
         Bundle args = new Bundle();
@@ -67,6 +80,40 @@ public class CrimeFragment extends Fragment {
         UUID crimeId = (UUID)getArguments().getSerializable(ARG_CRIME_ID);
         mCrime = CrimeLab.get(getActivity()).getCrime(crimeId);
         mPhotoFile = CrimeLab.get(getActivity()).getPhotoFile(mCrime);
+        mClient = new GoogleApiClient.Builder(getActivity())
+                .addApi(LocationServices.API)
+                .addConnectionCallbacks(new GoogleApiClient.ConnectionCallbacks() {
+                    @Override
+                    public void onConnected(@Nullable Bundle bundle) {
+                        LocationRequest request = LocationRequest.create();
+                        request.setPriority(LocationRequest.PRIORITY_HIGH_ACCURACY);
+                        request.setNumUpdates(1);
+                        request.setInterval(0);
+
+                        if (ContextCompat.checkSelfPermission(getActivity(), Manifest.permission.ACCESS_FINE_LOCATION)
+                            != PackageManager.PERMISSION_GRANTED) {
+                            return;
+                        }
+
+                        LocationServices.FusedLocationApi.requestLocationUpdates(mClient, request, new LocationListener() {
+                            @Override
+                            public void onLocationChanged(Location location) {
+                                Log.i("LOCATION", "Got a fix: " + location);
+                            }
+                        });
+                    }
+
+                    @Override
+                    public void onConnectionSuspended(int i) {
+                    }
+                })
+                .build();
+    }
+
+    @Override
+    public void onStart() {
+        super.onStart();
+        mClient.connect();
     }
 
     @Override
@@ -74,6 +121,12 @@ public class CrimeFragment extends Fragment {
         super.onPause();
 
         CrimeLab.get(getActivity()).updateCrime(mCrime);
+    }
+
+    @Override
+    public void onStop() {
+        super.onStop();
+        mClient.disconnect();
     }
 
     @Override
@@ -102,6 +155,17 @@ public class CrimeFragment extends Fragment {
                 DatePickerFragment dialog = DatePickerFragment.newInstance(mCrime.getDate());
                 dialog.setTargetFragment(CrimeFragment.this, REQUEST_DATE);
                 dialog.show(manager, DIALOG_DATE);
+            }
+        });
+
+        mMapButton = (Button)v.findViewById(R.id.crime_location);
+        mMapButton.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View v) {
+                Intent intent = new Intent(getActivity(), MapsActivity.class);
+                intent.putExtra("latitude", mCrime.getLat());
+                intent.putExtra("longitude", mCrime.getLon());
+                startActivity(intent);
             }
         });
 

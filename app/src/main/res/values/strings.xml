@@ -22,4 +22,7 @@
     <string name="crime_report_suspect">the suspect is %s.</string>
     <string name="crime_report_subject">CriminalIntent Crime Report</string>
     <string name="send_report">Send crime report via</string>
+    <string name="crime_location_label">Crime Location</string>
+    <string name="crime_location_text">Show Map</string>
+    <string name="title_activity_maps">Map</string>
 </resources>
