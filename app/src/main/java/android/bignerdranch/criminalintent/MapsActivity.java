@@ -1,9 +1,7 @@
 package android.bignerdranch.criminalintent;
 
 import androidx.fragment.app.FragmentActivity;
-
 import android.os.Bundle;
-
 import com.google.android.gms.maps.CameraUpdate;
 import com.google.android.gms.maps.CameraUpdateFactory;
 import com.google.android.gms.maps.GoogleMap;
@@ -15,14 +13,21 @@ import com.google.android.gms.maps.model.MarkerOptions;
 public class MapsActivity extends FragmentActivity implements OnMapReadyCallback {
 
     private GoogleMap mMap;
-    private double latitude;
-    private double longitude;
+    private double mlatitude;
+    private double mlongitude;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_maps);
         // Obtain the SupportMapFragment and get notified when the map is ready to be used.
+
+        Bundle extras = getIntent().getExtras();
+        if (extras != null) {
+            mlatitude = extras.getDouble("latitude");
+            mlongitude = extras.getDouble("longitude");
+        }
+
         SupportMapFragment mapFragment = (SupportMapFragment) getSupportFragmentManager()
                 .findFragmentById(R.id.map);
         mapFragment.getMapAsync(this);
@@ -45,7 +50,7 @@ public class MapsActivity extends FragmentActivity implements OnMapReadyCallback
     }
 
     private void updateUI() {
-        LatLng myPoint = new LatLng(latitude, longitude);
+        LatLng myPoint = new LatLng(mlatitude, mlongitude);
 
         MarkerOptions myMarker = new MarkerOptions().position(myPoint).title("Crime Location");
 

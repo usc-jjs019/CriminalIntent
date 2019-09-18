@@ -49,12 +49,15 @@ public class Crime {
     public double getLat() {
         return mLat;
     }
+
     public void setLat(double lat) {
         mLat = lat;
     }
+
     public double getLon() {
         return mLong;
     }
+
     public void setLon(double lon) {
         mLong = lon;
     }

@@ -16,7 +16,6 @@ import android.bignerdranch.criminalintent.database.CrimeBaseHelper;
 
 public class CrimeLab {
     private static CrimeLab sCrimeLab;
-
     private Context mContext;
     private SQLiteDatabase mDatabase;
 

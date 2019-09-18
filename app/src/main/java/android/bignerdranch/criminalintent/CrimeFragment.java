@@ -34,8 +34,10 @@ import androidx.fragment.app.Fragment;
 import androidx.fragment.app.FragmentManager;
 
 import com.google.android.gms.common.api.GoogleApiClient;
+import com.google.android.gms.location.LocationCallback;
 import com.google.android.gms.location.LocationListener;
 import com.google.android.gms.location.LocationRequest;
+import com.google.android.gms.location.LocationResult;
 import com.google.android.gms.location.LocationServices;
 
 import java.io.File;
@@ -96,15 +98,23 @@ public class CrimeFragment extends Fragment {
                                 != PackageManager.PERMISSION_GRANTED) {
                             return;
                         }
-
-                        LocationServices.FusedLocationApi.requestLocationUpdates(mClient, request, new LocationListener() {
-                            @Override
-                            public void onLocationChanged(Location location) {
-                                mCrime.setLat(location.getLatitude());
-                                mCrime.setLon(location.getLongitude());
-                                Log.i("LOCATION", "Got a fix: " + location);
-                            }
-                        });
+                        LocationServices.getFusedLocationProviderClient(getActivity())
+                            .requestLocationUpdates(request, new LocationCallback() {
+                                @Override
+                                public void onLocationResult(LocationResult locationResult) {
+                                    super.onLocationResult(locationResult);
+                                    Location location = locationResult.getLastLocation();
+                                    setLocation(location);
+                                }
+                            }, null);
+//                        LocationServices.FusedLocationApi.requestLocationUpdates(mClient, request, new LocationListener() {
+//                            @Override
+//                            public void onLocationChanged(Location location) {
+//                                mCrime.setLat(location.getLatitude());
+//                                mCrime.setLon(location.getLongitude());
+//                                Log.i("LOCATION", "Got a fix: " + location);
+//                            }
+//                        });
                     }
 
                     @Override
@@ -112,6 +122,12 @@ public class CrimeFragment extends Fragment {
                     }
                 })
                 .build();
+    }
+
+    private void setLocation(Location location) {
+        mCrime.setLat(location.getLatitude());
+        mCrime.setLon(location.getLongitude());
+        mLocationView.setText("latitude: " + mCrime.getLat() + " longtitude: " + mCrime.getLon());
     }
 
     @Override
