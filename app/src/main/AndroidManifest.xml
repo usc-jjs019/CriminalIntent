@@ -54,6 +54,10 @@
             android:name=".CrimeActivity"
             android:parentActivityName=".CrimeListActivity"></activity>
 
+        <activity
+            android:name=".HelpWebPage"
+            android:parentActivityName=".CrimeListActivity"></activity>
+
         <provider
             android:name=".MyFileProvider"
             android:authorities="com.bignerdranch.android.criminalintent.fileprovider"

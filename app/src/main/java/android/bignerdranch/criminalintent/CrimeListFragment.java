@@ -1,6 +1,7 @@
 package android.bignerdranch.criminalintent;
 
 import android.content.Intent;
+import android.net.Uri;
 import android.os.Bundle;
 import android.view.LayoutInflater;
 import android.view.Menu;
@@ -85,6 +86,9 @@ public class CrimeListFragment extends Fragment {
                 getActivity().invalidateOptionsMenu();
                 updateSubtitle();
                 return true;
+            case R.id.help:
+                intent = HelpWebPage.newIntent(getActivity(), Uri.parse("www.usc.edu.au"));
+                startActivity(intent);
             default:
                 return super.onOptionsItemSelected(item);
         }
