@@ -32,6 +32,6 @@ public class HelpWebPage extends AppCompatActivity {
             }
         });
 
-        mWebView.loadUrl("www.usc.edu.au");
+        mWebView.loadUrl("https://www.usc.edu.au");
     }
 }
